@@ -11,7 +11,7 @@ app.get('/approva/mx-widget-url/:guid', async (req, res) => {
   if(!req.params.guid) {
     res.send("Please provide Mx User Id Param.");
   }
-  
+
   let data = {
       color_scheme: "light",
       disable_institution_search: false,
@@ -21,14 +21,16 @@ app.get('/approva/mx-widget-url/:guid', async (req, res) => {
       ui_message_version: 4,
       widget_type: "connect_widget"
   }
+
   try {
     const result = await mxService.createWidgetUrl(req.params.guid, data);
     return res.send(result.data);
-  } catch(error: any){
-    return res.send({'error': error.message});
+  } catch(message: any){
+    res.status(message.response.status);
+    return res.send({'error': message.response.statusText});
   }
 });
 
 app.listen(port, () => {
-  return console.log(`Express is listening at http://localhost:${port}`);
+  return console.log(`Express is listening at ::${port}`);
 });
